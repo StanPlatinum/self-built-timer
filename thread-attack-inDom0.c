@@ -187,8 +187,8 @@ void *thread_attack()
 	/* output the result */
 	printf("probe 1 line in TSC:\t%llu\nprobe 1 line in ours:\t%llu\n", rpl1t, (unsigned long long)rpl1);
 
-	printf("probe 8 sets in TSC:\t\n%llu ,%llu, %llu, %llu\n%llu, %llu, %llu, %llu\n", rp1t, rp2t, rp3t, rp4t, rp5t, rp6t, rp7t, rp8t);
-	printf("probe 8 sets in ours:\t\n%llu ,%llu, %llu, %llu\n%llu, %llu, %llu, %llu\n", (unsigned long long)rp1, (unsigned long long)rp2, (unsigned long long)rp3, (unsigned long long)rp4, (unsigned long long)rp5, (unsigned long long)rp6, (unsigned long long)rp7, (unsigned long long)rp8);
+	printf("probe 1 set in TSC:\t\n%llu ,%llu, %llu, %llu\n%llu, %llu, %llu, %llu\n", rp1t, rp2t, rp3t, rp4t, rp5t, rp6t, rp7t, rp8t);
+	printf("probe 1 set in ours:\t\n%llu ,%llu, %llu, %llu\n%llu, %llu, %llu, %llu\n", (unsigned long long)rp1, (unsigned long long)rp2, (unsigned long long)rp3, (unsigned long long)rp4, (unsigned long long)rp5, (unsigned long long)rp6, (unsigned long long)rp7, (unsigned long long)rp8);
 /* end of attack */
 
 	/* deinit the hugepages */
