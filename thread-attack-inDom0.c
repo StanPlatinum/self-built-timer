@@ -105,8 +105,10 @@ void *thread_clock()
 /* to carry out the timing attack */
 void *thread_attack()
 {
-	uint64_t rpl1, rp1, rp2, rp3, rp4, rp5, rp6, rp7, rp8, start, end;
-	unsigned long long rpl1t, rp1t, rp2t, rp3t, rp4t, rp5t, rp6t, rp7t, rp8t, startt, endt;
+	uint64_t rpl1, rp1, rp2, rp3, rp4, rp5, rp6, rp7, rp8;
+	uint64_t start, end;
+	unsigned long long rpl1t, rp1t, rp2t, rp3t, rp4t, rp5t, rp6t, rp7t, rp8t;
+	unsigned long long startt, endt, resultt;
 	printf("this is thread timing attack...\n");
 	set_cpu(1);
 
@@ -147,8 +149,19 @@ void *thread_attack()
 		tsc_end = rdtsc_end();
 	end = ticks;
 #endif
-	/* attack self */
 
+/* attack self */
+
+	/* probe a set using lff's way */
+	/* malloc pool */
+	uint64_t *pool = (uint64_t *)malloc(L3_ways);
+	/* leverage p1 to construct the candidate addresses */
+	pool = build_eviction_array(p1, pool, L3_ways);
+	/* measure this */
+	resultt = traverse_eviction_array(pool, L3_ways);
+	printf("probe 1 set using lff's way: %llu\n", resultt);
+
+	/* use old way */
 	rpl1 = probe_line(p1);
 
 	rp1 = probe_set(p1);
@@ -176,6 +189,7 @@ void *thread_attack()
 
 	printf("probe 8 sets in TSC:\t\n%llu ,%llu, %llu, %llu\n%llu, %llu, %llu, %llu\n", rp1t, rp2t, rp3t, rp4t, rp5t, rp6t, rp7t, rp8t);
 	printf("probe 8 sets in ours:\t\n%llu ,%llu, %llu, %llu\n%llu, %llu, %llu, %llu\n", (unsigned long long)rp1, (unsigned long long)rp2, (unsigned long long)rp3, (unsigned long long)rp4, (unsigned long long)rp5, (unsigned long long)rp6, (unsigned long long)rp7, (unsigned long long)rp8);
+/* end of attack */
 
 	/* deinit the hugepages */
 	shmctl(shmid1, IPC_RMID, NULL);
@@ -207,7 +221,6 @@ int main()
 	int create_assert;
 	memset(&thread, 0, sizeof(thread));
 	cpu_nums = sysconf(_SC_NPROCESSORS_CONF);
-
 
 	/* start up the clock thread */ 
 	create_assert = startup_clock();

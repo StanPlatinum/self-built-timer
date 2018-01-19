@@ -1,6 +1,7 @@
 #ifndef CACHE_SPEC
 
 #define CACHE_SPEC
+
 #define L3_ways 16
 #define L3_number_of_sets 8192
 #define L3_SLICE_number_of_sets 2048

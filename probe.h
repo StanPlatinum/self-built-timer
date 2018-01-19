@@ -6,6 +6,6 @@ unsigned long long probe_line_tsc(char *p);
 /* read set and time using rdtsc */
 unsigned long long probe_set_tsc(char *p);
 
-uint64_t* build_eviction_array(char *p, int len);
+uint64_t* build_eviction_array(char *p, uint64_t *arr, int len);
 
-void make_eviction_list(uint64_t *arr, int len);
+unsigned long long traverse_eviction_array(uint64_t *a, int len);

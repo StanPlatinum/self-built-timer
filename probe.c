@@ -57,24 +57,44 @@ unsigned long long probe_set_tsc(char *p)
 	return rv;
 }
 
-uint64_t* build_eviction_array(char *p, int len)
+/*
+ * p is the first address of the target set, namely pool[0].
+ * arr is the first address of array that helps to build a eviction set. User 
+ * should allocate arr[] first, then use this function!
+ */
+uint64_t* build_eviction_array(char *p, uint64_t *arr, int len)
 {
 	/* build the array[] for function::make_eviction_list */
-	uint64_t arr[len];
+
 	/* initialization */
-	int i;
-	for (i = 0; i < len-1; ++i) {
+	int i, j;
+	for (i = 0; i < len; ++i) {
 		arr[i] = (uint64_t)p;
 		p += (L3_SLICE_number_of_sets)*64; 
 	}
+	/* make eviction list */
+	for (j = 0; j < len-1; ++j) {
+		/* actually put addresses as content into the cells of eviction set */
+		*((uint64_t *)arr[j]) = arr[j+1];
+	}
+
+	/* something wrong with next line */
+	*((uint64_t *)arr[len-1]) = 0;
+
+	/* but how to send out the arr[]? */
+	return arr;
 }
 
-void make_eviction_list(uint64_t *arr, int len)
+/* a = arr[0] */
+unsigned long long traverse_eviction_array(uint64_t *a, int len)
 {
 	int i;
-	for (i = 0; i < len-1; ++i) {
-		/* actually put addresses as content into the cells of eviction set */
-		*((uint64_t *)arr[i]) = arr[i+1];
-	}
-	*((uint64_t *)arr[len-1]) = 0;
+	unsigned long long start, end, result = 0;
+	start = rdtsc_start();
+	//for (i = 0; i < len; i++)	a = *(uint64_t *)a;
+	/* this is brilliant, created by lailai */
+	while ( ( a = *(uint64_t *)a ) );
+	end = rdtsc_start();
+	result = end - start;
+	return result;
 }

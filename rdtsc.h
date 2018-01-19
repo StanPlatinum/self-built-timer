@@ -1,4 +1,5 @@
 #ifndef RDTSC_H
+#define RDTSC_H
 
 #include <stdint.h>
 
